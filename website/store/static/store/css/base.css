@@ -1,15 +1,27 @@
 .store-body {
-    background-color: rgb(103, 103, 172);
     width: 100%;
-    height: 100vh;
+    height: max-content;
+    min-height: 100vh;
+    overflow-x: hidden;
+    padding: 0;
+    margin: 0;
 }
 
 #header-block {
+    background-color: whitesmoke;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 4px;
     outline: 0.01rem solid black;
+    box-shadow: 0rem 0.4rem 0.5rem 0.05rem rgba(224, 215, 215, 0.4);
+    border-radius: 0.5rem;
+    padding: 0rem 1rem 0rem 1rem;
+}
+
+#store-link {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 #button-container {
@@ -21,3 +33,118 @@
     padding: 0.5rem;
     margin: 0.5rem;
 }
+
+.header-btn {
+    background-color: white;
+    color:black;
+    border: 0; 
+    border-radius: 0.3rem;
+    box-shadow: 0.2rem 0.2rem 0.5rem 0.05rem rgba(224, 215, 215, 0.4);
+    scale: 1.2;
+    height: 2rem;
+    cursor: pointer;
+}
+
+.header-btn:hover {
+    scale: 1.25;
+    box-shadow: 0rem;
+}
+
+
+#outer-curtain {
+    display: block;
+    position: relative;
+    background-color: rgb(30, 30, 30);
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    z-index: 2;
+    transition: transform 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+body[data-nav="true"] > #outer-curtain {
+    transform: translateY(-50%);
+}
+
+
+#menu-btn { 
+    display: block;
+    position: absolute; 
+    top: calc(100vh - 10rem);
+    left: 50vw;
+    width: 2rem;
+    height: 2rem;
+    background-color: blanchedalmond;
+    border-radius: 2rem;
+    border: 0;
+    scale: 2;
+    z-index: 3;
+}
+
+#menu-btn:hover {
+    background-color: white;
+    scale: 2.25;
+}
+
+#menu-btn:active {
+    background-color:gray;
+    scale: 1.9;
+}
+
+#inner-curtain {
+    position: absolute;
+    left: 0rem;
+    bottom: 0rem;
+    height: 50vh;
+    width: 100%;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    z-index: 1;
+}
+
+#menu-container {
+    display: flex;
+    height: 50vh;
+    width: max-content;
+    min-width: 100%;
+    position: relative;
+    left: 0rem;
+    bottom: 0rem;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    overflow-y: hidden;
+    transform: translateY(50%) scale(0.9);
+    transition: transform 350ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+body[data-nav="true"] > #inner-curtain > #menu-container {
+    transform: translateY(20%) scale(1.1);
+}
+
+.menu-card {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    text-transform: uppercase;
+}
+
+.menu-card > .menu-text {
+    color: black;
+    text-decoration: none;
+    font-style: normal;
+    font-size: 1.5rem;
+    font-weight: bold;
+    transform: translateY(1rem);
+    margin: 0;
+    padding: 0;
+
+}
+
+.menu-card > img {
+    width: 30vw;
+    height: 30vh;
+    object-fit: cover;
+    object-position: center;
+    margin: 0;
+}
+

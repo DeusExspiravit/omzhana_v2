@@ -4,25 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Omzhana Store</title>
-    {% comment %} <link rel="stylesheet" href="{% static 'store/css/base.css' %}"> {% endcomment %}
-    <link rel="stylesheet" href="/static/store/css/base.css">
+    <title>{% block title %}Omzhana Store{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'store/css/base.css' %}">
 
 </head>
 
-<body id="store-body" class="store-body">
-    <header class="header-container">
-        <div class="header-content" id="header-block">
-            <h1>
-                <a href="">Store</a>
-            </h1>
-            <div id="button-container">
-                <button class="header-btn" id="cart-btn"> Cart </button>
-                <button class="header-btn" id="checkout-btn"> Checkout </button>
-            </div>
-            
-        </div>
-    </header>
+<body id="store-body" class="store-body" data-nav="false">
 
+    <section class="curtain" id="outer-curtain">
+        <header class="header-container">
+            <div class="header-content" id="header-block">
+                <h1>
+                    <a href="" id="store-link">Store</a>
+                </h1>
+                <div id="button-container">
+                    <button class="header-btn" id="cart-btn"> Cart </button>
+                    <button class="header-btn" id="checkout-btn"> Checkout </button>
+                </div>
+            </div>
+        </header>
+        {% block content %}{% endblock %}
+
+    </section>
+
+    <button class='menu-button' id='menu-btn' onclick="toggleNav()"></button>
+    <section class="curtain" id="inner-curtain">
+        <nav class="menu" id="menu-container">
+            <a href="" class="menu-card">
+                <h3 class="menu-text">Home</h3>
+                <img src="../static/store/images/food_0.jpg" alt="Food Image">
+            </a>
+            <a href="" class="menu-card">
+                <h3 class="menu-text">Shop</h3>
+                <img src="../static/store/images/food_1.jpg" alt="Food Image">
+            </a>
+            <a href="" class="menu-card">
+                <h3 class="menu-text">About</h3>
+                <img src="../static/store/images/food_2.jpg" alt="Food Image">
+            </a>
+            <a href="" class="menu-card">
+                <h3 class="menu-text">Contact</h3>
+                <img src="../static/store/images/food_3.jpg" alt="Food Image">
+            </a>
+            <a href="" class="menu-card">
+                <h3 class="menu-text">Checkout</h3>
+                <img src="../static/store/images/food_4.jpg" alt="Food Image">
+            </a>
+        </nav>
+    </section>
+
+<script src="{% static 'store/js/base.js' %}"></script>
 </body>
 </html>
