@@ -1,6 +1,11 @@
 html,
 body {
     font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 242, 223, 0.96),
+        rgba(224, 214, 184, 0.9)
+    );
 }
 
 .store-body {
@@ -8,7 +13,7 @@ body {
     height: max-content;
     min-height: 100vh;
     overflow-x: hidden;
-    padding: 0;
+    padding: 0 0 6rem;
     margin: 0;
 }
 
@@ -31,28 +36,45 @@ body {
 
 #button-container {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: flex-end;
     align-items: center;
-    width: 20vw;
-    gap: 1rem;
-    padding: 0.5rem;
-    margin: 0.5rem;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    padding: 0.5rem 0;
+    margin: 0;
 }
 
 .header-btn {
-    background-color: #8C6E63;
-    color:black;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 6.5rem;
+    background: linear-gradient(135deg, rgba(255, 242, 223, 0.95), rgba(214, 184, 170, 0.88));
+    color: #3E2522;
     border: 0; 
-    border-radius: 0.3rem;
-    box-shadow: 0.2rem 0.2rem 0.5rem 0.05rem rgba(224, 215, 215, 0.4);
-    scale: 1.2;
-    height: 2rem;
+    border-radius: 999px;
+    padding: 0.8rem 1.2rem;
+    box-shadow:
+        0 0.7rem 1.4rem rgba(24, 12, 10, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.38);
+    height: 2.9rem;
     cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: transform 180ms ease, box-shadow 180ms ease, filter 180ms ease;
 }
 
 .header-btn:hover {
-    scale: 1.25;
-    box-shadow: 0rem;
+    transform: translateY(-2px);
+    box-shadow:
+        0 0.95rem 1.7rem rgba(24, 12, 10, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    filter: brightness(1.02);
+}
+
+.header-btn:active {
+    transform: translateY(0) scale(0.98);
 }
 
 
@@ -68,45 +90,49 @@ body {
     -webkit-backdrop-filter: blur(18px) saturate(140%);
     border: 1px solid rgba(255, 255, 255, 0.28);
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
     margin: 0;
     z-index: 2;
     transition: transform 300ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
 
 body[data-nav="true"] > #outer-curtain {
-    transform: translateY(-50%);
+    transform: translateY(-50vh);
 }
 
 
 #menu-btn { 
     display: block;
-    position: absolute; 
-    top: calc(100vh - 10rem);
-    left: 50vw;
-    width: 2rem;
-    height: 2rem;
+    position: fixed;
+    left: 50%;
+    bottom: 2rem;
+    width: 3.25rem;
+    height: 3.25rem;
     background-color: #3E2522;
     border-radius: 2rem;
     border: 0;
-    scale: 2;
-    z-index: 3;
+    transform: translateX(-50%);
+    z-index: 5;
+    box-shadow: 0 1rem 2rem rgba(62, 37, 34, 0.24);
+    transition: background-color 180ms ease, transform 180ms ease, box-shadow 180ms ease;
 }
 
 #menu-btn:hover {
     background-color: #855b57;
-    scale: 2.25;
+    transform: translateX(-50%) translateY(-2px);
+    box-shadow: 0 0.7rem 1.5rem rgba(62, 37, 34, 0.2);
 }
 
 #menu-btn:active {
     background-color:rgb(21, 32, 84);
-    scale: 1.9;
+    transform: translateX(-50%) scale(0.96);
 }
 
 #inner-curtain {
-    position: absolute;
-    left: 0rem;
-    bottom: 0rem;
+    position: fixed;
+    left: 0;
+    bottom: 0;
     height: 50vh;
     width: 100%;
     background: linear-gradient(
@@ -116,7 +142,14 @@ body[data-nav="true"] > #outer-curtain {
     );
     overflow-x: scroll;
     overflow-y: hidden;
-    z-index: 1;
+    z-index: 4;
+    transform: translateY(calc(100% - 4.5rem));
+    transition: transform 320ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    box-shadow: 0 -1rem 3rem rgba(62, 37, 34, 0.12);
+}
+
+body[data-nav="true"] > #inner-curtain {
+    transform: translateY(0);
 }
 
 #menu-container {
@@ -129,49 +162,69 @@ body[data-nav="true"] > #outer-curtain {
     bottom: 0rem;
     justify-content: flex-start;
     gap: 1.5rem;
+    padding: 0 1.5rem 1.5rem;
+    box-sizing: border-box;
     overflow-y: hidden;
-    transform: translateY(50%) scale(0.9);
+    transform: translateY(20%) scale(0.9);
     transition: transform 350ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
 
 body[data-nav="true"] > #inner-curtain > #menu-container {
-    transform: translateY(20%) scale(1.1);
+    transform: translateY(0) scale(1);
 }
 
 .menu-card {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: center;
+    align-items: stretch;
     text-decoration: none;
     margin: 0;
-    padding: 1rem 1rem 1.25rem;
+    padding: 0.8rem;
+    width: clamp(15rem, 22vw, 19rem);
     text-transform: uppercase;
-    background: linear-gradient(to bottom right, #FFF2DF 30%, #3E2522);
-    border-radius: 2rem;
-    box-shadow: 3rem 4rem 5rem 0.1rem rgba(38, 19, 9, 0.42);
+    background: linear-gradient(160deg, rgba(255, 249, 240, 0.98), rgba(232, 216, 196, 0.92));
+    border: 1px solid rgba(140, 110, 99, 0.18);
+    border-radius: 1.6rem;
+    box-shadow: 0 1.2rem 2.5rem rgba(62, 37, 34, 0.14);
     overflow: hidden;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-0.35rem);
+    box-shadow: 0 1.5rem 2.8rem rgba(62, 37, 34, 0.18);
+    border-color: rgba(140, 110, 99, 0.28);
 }
 
 .menu-card > .menu-text {
+    display: inline-flex;
+    align-items: center;
     align-self: flex-start;
-    color: white;
+    color: #3E2522;
     text-decoration: none;
     font-style: normal;
-    font-size: 1.2rem;
-    font-weight: 700;
+    font-size: 0.9rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    line-height: 1;
     transform: translateY(0);
     margin: 0;
-    padding: 0 0 0.85rem;
+    margin-bottom: 0.65rem;
+    padding: 0.7rem 0.95rem;
+    background-color: rgba(255, 242, 223, 0.98);
+    border-radius: 999px;
+    box-shadow: 0 0.35rem 0.8rem rgba(62, 37, 34, 0.08);
 }
 
 .menu-card > img {
-    width: 30vw;
-    height: 30vh;
+    width: 100%;
+    height: clamp(13rem, 24vh, 16rem);
     object-fit: cover;
     object-position: center;
     margin: 0;
-    padding: 0.5rem;
-    border-radius: 2rem;
-    background-color: rgba(255, 242, 223, 0.92);
+    padding: 0;
+    border-radius: 1rem;
+    background-color: transparent;
+    box-sizing: border-box;
 }
