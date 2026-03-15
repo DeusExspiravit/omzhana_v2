@@ -1,3 +1,8 @@
+html,
+body {
+    font-family: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+}
+
 .store-body {
     width: 100%;
     height: max-content;
@@ -8,7 +13,7 @@
 }
 
 #header-block {
-    background-color: whitesmoke;
+    background-color: #3E2522;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -19,7 +24,7 @@
 }
 
 #store-link {
-    color: black;
+    color: white;
     text-decoration: none;
     cursor: pointer;
 }
@@ -35,7 +40,7 @@
 }
 
 .header-btn {
-    background-color: white;
+    background-color: #8C6E63;
     color:black;
     border: 0; 
     border-radius: 0.3rem;
@@ -54,7 +59,14 @@
 #outer-curtain {
     display: block;
     position: relative;
-    background-color: rgb(30, 30, 30);
+    background: linear-gradient(
+        135deg,
+        rgba(255, 242, 223, 0.78),
+        rgba(224, 214, 184, 0.6)
+    );
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.28);
     width: 100vw;
     height: 100vh;
     margin: 0;
@@ -74,7 +86,7 @@ body[data-nav="true"] > #outer-curtain {
     left: 50vw;
     width: 2rem;
     height: 2rem;
-    background-color: blanchedalmond;
+    background-color: #3E2522;
     border-radius: 2rem;
     border: 0;
     scale: 2;
@@ -82,12 +94,12 @@ body[data-nav="true"] > #outer-curtain {
 }
 
 #menu-btn:hover {
-    background-color: white;
+    background-color: #855b57;
     scale: 2.25;
 }
 
 #menu-btn:active {
-    background-color:gray;
+    background-color:rgb(21, 32, 84);
     scale: 1.9;
 }
 
@@ -97,6 +109,11 @@ body[data-nav="true"] > #outer-curtain {
     bottom: 0rem;
     height: 50vh;
     width: 100%;
+    background: linear-gradient(
+        180deg,
+        rgba(255, 242, 223, 0.92),
+        rgba(224, 214, 184, 0.86)
+    );
     overflow-x: scroll;
     overflow-y: hidden;
     z-index: 1;
@@ -122,22 +139,30 @@ body[data-nav="true"] > #inner-curtain > #menu-container {
 }
 
 .menu-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     text-decoration: none;
     margin: 0;
-    padding: 0;
+    padding: 1rem 1rem 1.25rem;
     text-transform: uppercase;
+    background: linear-gradient(to bottom right, #FFF2DF 30%, #3E2522);
+    border-radius: 2rem;
+    box-shadow: 3rem 4rem 5rem 0.1rem rgba(38, 19, 9, 0.42);
+    overflow: hidden;
 }
 
 .menu-card > .menu-text {
-    color: black;
+    align-self: flex-start;
+    color: white;
     text-decoration: none;
     font-style: normal;
-    font-size: 1.5rem;
-    font-weight: bold;
-    transform: translateY(1rem);
+    font-size: 1.2rem;
+    font-weight: 700;
+    transform: translateY(0);
     margin: 0;
-    padding: 0;
-
+    padding: 0 0 0.85rem;
 }
 
 .menu-card > img {
@@ -146,5 +171,7 @@ body[data-nav="true"] > #inner-curtain > #menu-container {
     object-fit: cover;
     object-position: center;
     margin: 0;
+    padding: 0.5rem;
+    border-radius: 2rem;
+    background-color: rgba(255, 242, 223, 0.92);
 }
-

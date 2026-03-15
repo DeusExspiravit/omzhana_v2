@@ -1,6 +1,59 @@
 {% extends 'store/base.html' %}
+{% load static %}
 
 {% block title %}Home - Omzhana Store{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'store/css/home.css' %}">
+{% endblock %}
 
 {% block content %}
+    <div class="home-content">
+        <div class="hero-section">
+            <h1>Welcome to Omzhana Store</h1>
+            <p>Your one-stop shop for delicious food and more!</p>
+            <img src="{% static 'store/images/ramen.png' %}" alt="Delicious Food">
+            <button class="shop-now-btn">Shop Now</button>
+        </div>
+
+        <div class="featured-products">
+            <div class="product-column" id="first-featured-column">
+                <ul class="product-categories">
+                    <li class="category-item">Food</li>
+                    <li class="category-item">Drinks</li>
+                    <li class="category-item">Snacks</li>
+                </ul>
+                <!-- Example product cards -->
+                <div class="product-card">
+                    <img src="{% static 'store/images/food_1.jpg' %}" alt="Product Image">
+                    <h3>Product 1</h3>
+                    <p>$19.99</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="{% static 'store/images/food_2.jpg' %}" alt="Product Image">
+                    <h3>Product 2</h3>
+                    <p>$29.99</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+                <!-- Add more product cards as needed -->
+            </div>
+
+            <div class="product-column" id="second-featured-column">
+                <!-- Example product cards -->
+                <div class="product-card">
+                    <img src="{% static 'store/images/food_3.jpg' %}" alt="Product Image">
+                    <h3>Product 1</h3>
+                    <p>$19.99</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+                <div class="product-card">
+                    <img src="{% static 'store/images/food_4.jpg' %}" alt="Product Image">
+                    <h3>Product 2</h3>
+                    <p>$29.99</p>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+                <!-- Add more product cards as needed -->
+            </div>
+        </div>
+    </div>
 {% endblock %}  
