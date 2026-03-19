@@ -1,3 +1,4 @@
+(() => {
 const assistantCatalogElement = document.querySelector("#assistant-catalog-data");
 const assistantTrigger = document.querySelector("#store-assistant-trigger");
 const assistantShell = document.querySelector("#store-assistant-shell");
@@ -498,3 +499,7 @@ document.addEventListener("keydown", (event) => {
 if (assistantMessages && assistantCatalog.length > 0) {
     appendAssistantMessage("assistant", assistantIntroMarkup);
 }
+
+window.openStoreAssistant = openAssistant;
+window.closeStoreAssistant = closeAssistant;
+})();
