@@ -1,0 +1,29 @@
+services:
+  - type: web
+    name: omzhana-store
+    runtime: python
+    plan: free
+    rootDir: website
+    buildCommand: pip install -r ../requirements.txt && python manage.py collectstatic --noinput
+    startCommand: python manage.py migrate --noinput && gunicorn website.wsgi:application
+    envVars:
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_PATH
+        value: /var/data/db.sqlite3
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://*.onrender.com
+      - key: SHOPIFY_STORE_DOMAIN
+        sync: false
+      - key: SHOPIFY_STOREFRONT_TOKEN
+        sync: false
+      - key: SHOPIFY_API_VERSION
+        value: "2025-01"
+    disk:
+      name: omzhana-data
+      mountPath: /var/data
+      sizeGB: 1

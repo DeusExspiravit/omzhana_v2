@@ -28,14 +28,24 @@ _load_env_file(BASE_DIR.parent / '.env')
 _load_env_file(BASE_DIR / '.env')
 
 
+def _env_bool(name: str, default: bool) -> bool:
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {'1', 'true', 'yes', 'on'}
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-lu9i2dke7*4wiibfqq%j!!qbe6v0#$bwi2q_zyx&i+(y4^cofk'
+SECRET_KEY = os.getenv(
+    'DJANGO_SECRET_KEY',
+    'django-insecure-lu9i2dke7*4wiibfqq%j!!qbe6v0#$bwi2q_zyx&i+(y4^cofk',
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = _env_bool('DJANGO_DEBUG', True)
 
 _allowed_hosts_env = [host.strip() for host in os.getenv('ALLOWED_HOSTS', '').split(',') if host.strip()]
 ALLOWED_HOSTS = _allowed_hosts_env or [
@@ -43,6 +53,7 @@ ALLOWED_HOSTS = _allowed_hosts_env or [
     '127.0.0.1',
     '[::1]',
     '.ngrok-free.dev',
+    '.onrender.com',
 ]
 
 _csrf_trusted_origins_env = [
@@ -50,6 +61,7 @@ _csrf_trusted_origins_env = [
 ]
 CSRF_TRUSTED_ORIGINS = _csrf_trusted_origins_env or [
     'https://*.ngrok-free.dev',
+    'https://*.onrender.com',
 ]
 
 
@@ -68,6 +80,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -96,6 +109,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'website.wsgi.application'
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Database
@@ -104,7 +119,7 @@ STATIC_URL = '/static/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.getenv('DATABASE_PATH', str(BASE_DIR / 'db.sqlite3')),
     }
 }
 
