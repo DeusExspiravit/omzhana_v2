@@ -1,0 +1,142 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}About - Omzhana Store{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'store/css/about.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="about-page">
+        <section class="about-canvas">
+            <span class="about-glow about-glow-one"></span>
+            <span class="about-glow about-glow-two"></span>
+            <span class="about-glow about-glow-three"></span>
+
+            <section class="about-hero">
+                <div class="about-hero-copy">
+                    <p class="about-kicker">About Omzhana</p>
+                    <h1>About Omzhana</h1>
+                    <p class="about-lead">Serving trusted food and pantry products for over 10 years, with both retail and wholesale supply available.</p>
+                    <p class="about-intro">
+                        Omzhana is a food and grocery business built on reliability, quality, and long-term customer trust.
+                        For more than a decade, we have been serving customers with carefully selected products, consistent
+                        service, and a focus on everyday essentials, imported foods, and pantry favorites. What started as
+                        a trusted wholesale and local supply business now also extends into a modern online storefront,
+                        making it easier for customers to explore and order from us.
+                    </p>
+                    {% if shopify_error %}
+                        <p class="store-notice">{{ shopify_error }}</p>
+                    {% endif %}
+                    <div class="about-hero-actions">
+                        <a class="about-primary-link" href="{% url 'shop' %}">Browse Products</a>
+                        <a class="about-secondary-link" href="#about-location">Contact for Wholesale</a>
+                    </div>
+                </div>
+
+                <div class="about-hero-visual">
+                    <div class="about-bowl-stage">
+                        <img class="about-bowl-main" src="{% static 'store/images/ramen.png' %}" alt="Omzhana signature bowl">
+                    </div>
+                    <article class="about-story-card">
+                        <p class="about-kicker">Our Story</p>
+                        <p>
+                            For over 10 years, Omzhana has been committed to bringing dependable quality and a thoughtfully
+                            curated range of food products to our customers. Over the years, we have built our reputation
+                            through steady service, strong product knowledge, and trusted wholesale relationships. Today,
+                            we continue that same approach while also expanding our retail presence online, so customers
+                            can experience the Omzhana range more easily.
+                        </p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="about-company-grid">
+                <article class="about-copy-block">
+                    <p class="about-kicker">What We Offer</p>
+                    <h2>What We Offer</h2>
+                    <p>
+                        Omzhana offers a curated selection of food products designed around quality, convenience, and
+                        variety. Our collection includes pantry essentials, imported grocery items, snacks, ready-to-cook
+                        products, specialty ingredients, and selected everyday favorites. We focus on products that
+                        customers return to regularly, whether for personal use, family needs, or business requirements.
+                    </p>
+                </article>
+
+                <article class="about-copy-block">
+                    <p class="about-kicker">Wholesale Available</p>
+                    <h2>Wholesale Available</h2>
+                    <p>
+                        In addition to retail sales, Omzhana also offers wholesale supply. With more than 10 years of
+                        experience in the trade, we understand the importance of dependable sourcing, consistent stock,
+                        and long-term business relationships. Whether you are a retailer, reseller, cafe, store, or food
+                        business looking for bulk purchasing options, Omzhana is available to support wholesale
+                        requirements with trusted service and product supply.
+                    </p>
+                </article>
+            </section>
+
+            <section class="about-company-grid about-company-grid-single">
+                <article class="about-copy-block">
+                    <p class="about-kicker">Why Choose Omzhana</p>
+                    <h2>Why Choose Omzhana</h2>
+                    <ul class="about-product-points">
+                        <li>Over 10 years of trusted experience</li>
+                        <li>Wholesale and retail availability</li>
+                        <li>Carefully selected quality products</li>
+                        <li>Reliable customer service</li>
+                        <li>A growing online storefront for easier access</li>
+                    </ul>
+                </article>
+            </section>
+
+            <section class="about-location" id="about-location">
+                <article class="about-location-copy">
+                    <p class="about-kicker">Residence Address</p>
+                    <h2>Find Omzhana at its listed residence and storefront location.</h2>
+                    <p>
+                        Customers can use the address and map below to locate the residence/storefront and plan visits,
+                        pickups, or local inquiries.
+                    </p>
+                    <div class="about-address-card">
+                        <p class="about-address-title">{{ about_company.address_name }}</p>
+                        <div class="about-address-lines">
+                            {% for line in about_company.address_lines %}
+                                <p>{{ line }}</p>
+                            {% endfor %}
+                        </div>
+                        <div class="about-address-meta">
+                            <p><strong>Phone:</strong> {{ about_company.phone }}</p>
+                            <p><strong>Email:</strong> {{ about_company.email }}</p>
+                            <p><strong>Hours:</strong> {{ about_company.hours }}</p>
+                        </div>
+                    </div>
+                </article>
+
+                <div class="about-map-card">
+                    <iframe
+                        title="Omzhana location map"
+                        src="{{ about_company.map_embed_url }}"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                </div>
+            </section>
+
+            <footer class="about-footer-grid">
+                <div>
+                    <p class="about-footer-title">Browse</p>
+                    <a href="{% url 'home' %}">Home</a>
+                    <a href="{% url 'shop' %}">Shop</a>
+                    <a href="{% url 'cart' %}">Cart</a>
+                </div>
+                <div>
+                    <p class="about-footer-title">Visit</p>
+                    <span>{{ about_company.address_lines.0 }}</span>
+                    <span>{{ about_company.address_lines.1 }}</span>
+                    <span>{{ about_company.address_lines.2 }}</span>
+                </div>
+            </footer>
+        </section>
+    </div>
+{% endblock %}

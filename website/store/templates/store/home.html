@@ -8,52 +8,84 @@
 
 {% block content %}
     <div class="home-content">
-        <div class="hero-section">
-            <h1>Welcome to Omzhana Store</h1>
-            <p>Your one-stop shop for delicious food and more!</p>
-            <img src="{% static 'store/images/ramen.png' %}" alt="Delicious Food">
-            <button class="shop-now-btn">Shop Now</button>
-        </div>
-
-        <div class="featured-products">
-            <div class="product-column" id="first-featured-column">
-                <ul class="product-categories">
-                    <li class="category-item">Food</li>
-                    <li class="category-item">Drinks</li>
-                    <li class="category-item">Snacks</li>
-                </ul>
-                <!-- Example product cards -->
-                <div class="product-card">
-                    <img src="{% static 'store/images/food_1.jpg' %}" alt="Product Image">
-                    <h3>Product 1</h3>
-                    <p>$19.99</p>
-                    <button class="add-to-cart-btn">Add to Cart</button>
+        <section class="hero-section">
+            <div class="hero-copy">
+                <p class="home-kicker">Curated pantry and comfort-food storefront</p>
+                <h1>Warm essentials, thoughtful picks, and everyday favorites.</h1>
+                <p class="hero-lead">Omzhana brings together pantry staples, snackable finds, and store-ready comfort meals in one cleaner, curated destination.</p>
+                <div class="hero-actions">
+                    <a class="hero-primary-link" href="{% url 'shop' %}">Shop the Store</a>
+                    <span class="hero-action-image" aria-hidden="true">
+                        <img src="{% static 'store/images/ramen.png' %}" alt="">
+                    </span>
+                    <a class="hero-secondary-link" href="{% url 'about' %}">About Omzhana</a>
                 </div>
-                <div class="product-card">
-                    <img src="{% static 'store/images/food_2.jpg' %}" alt="Product Image">
-                    <h3>Product 2</h3>
-                    <p>$29.99</p>
-                    <button class="add-to-cart-btn">Add to Cart</button>
+                <div class="hero-collections">
+                    {% for category in home_categories|slice:":3" %}
+                        <span>{{ category }}</span>
+                    {% endfor %}
                 </div>
-                <!-- Add more product cards as needed -->
             </div>
-
-            <div class="product-column" id="second-featured-column">
-                <!-- Example product cards -->
-                <div class="product-card">
-                    <img src="{% static 'store/images/food_3.jpg' %}" alt="Product Image">
-                    <h3>Product 1</h3>
-                    <p>$19.99</p>
-                    <button class="add-to-cart-btn">Add to Cart</button>
-                </div>
-                <div class="product-card">
-                    <img src="{% static 'store/images/food_4.jpg' %}" alt="Product Image">
-                    <h3>Product 2</h3>
-                    <p>$29.99</p>
-                    <button class="add-to-cart-btn">Add to Cart</button>
-                </div>
-                <!-- Add more product cards as needed -->
+            {% if shopify_error %}
+                <p class="store-notice">{{ shopify_error }}</p>
+            {% endif %}
+            <div class="hero-visual">
+                {% if home_rotating_products %}
+                    <article class="hero-note-card">
+                        <p class="hero-note-kicker">{{ home_rotating_products.0.category }}</p>
+                        <h2>{{ home_rotating_products.0.title }}</h2>
+                        <p>{{ home_rotating_products.0.description|truncatechars:92 }}</p>
+                        <span>{{ home_rotating_products.0.price }}</span>
+                    </article>
+                {% endif %}
             </div>
-        </div>
+            {% if home_rotating_products %}
+                <div class="hero-preview-layer" aria-hidden="true">
+                    {% for product in home_rotating_products|slice:":4" %}
+                        <div
+                            class="product-card home-rotating-card"
+                            data-product-name="{{ product.title }}"
+                            data-product-price="{{ product.price_amount }}"
+                            data-product-variant-id="{{ product.variant_id }}"
+                            data-product-handle="{{ product.handle }}"
+                            data-product-type="{{ product.category }}"
+                        >
+                            <img src="{{ product.image }}" alt="{{ product.title }}">
+                            <h3 class="featured-card-title">{{ product.title }}</h3>
+                            <p class="featured-card-price">{{ product.price }}</p>
+                            <ul class="featured-card-tags">
+                                {% for label in product.labels|slice:":3" %}
+                                    <li>{{ label }}</li>
+                                {% empty %}
+                                    <li>{{ product.category }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </section>
     </div>
-{% endblock %}  
+
+    <footer class="home-footer-grid">
+        <div>
+            <p class="home-footer-title">Browse</p>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'shop' %}">Shop</a>
+            <a href="{% url 'cart' %}">Cart</a>
+            <a href="{% url 'about' %}">About</a>
+        </div>
+        <div>
+            <p class="home-footer-title">Visit</p>
+            <span>{{ about_company.address_lines.0 }}</span>
+            <span>{{ about_company.address_lines.1 }}</span>
+            <span>{{ about_company.address_lines.2 }}</span>
+        </div>
+    </footer>
+
+    {{ home_rotating_products|json_script:"home-rotating-products-data" }}
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'store/js/home.js' %}"></script>
+{% endblock %}

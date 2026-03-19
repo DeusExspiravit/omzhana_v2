@@ -1,0 +1,274 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}Shop - Omzhana Store{% endblock %}
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'store/css/shop.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="store-front">
+        <div class="product-category">
+            {% if shopify_error %}
+                <p class="store-notice">{{ shopify_error }}</p>
+            {% endif %}
+            <div class="image-track" id="image-track" data-mouse-down-at="0" data-prev-percentage="0" data-percentage="0" data-was-dragging="false">
+                {% for category in shop_categories %}
+                    <button
+                        class="category-btn"
+                        type="button"
+                        data-category-key="{{ category.key }}"
+                        data-category-title="{{ category.title }}"
+                        data-category-description="{{ category.description }}"
+                        data-category-price="{{ category.price }}"
+                    >
+                        <img class="image" src="{% cycle '/static/store/images/food_0.jpg' '/static/store/images/food_1.jpg' '/static/store/images/food_2.jpg' '/static/store/images/food_3.jpg' '/static/store/images/food_4.jpg' '/static/store/images/food_5.jpg' '/static/store/images/food_6.jpg' '/static/store/images/food_7.jpg' %}" alt="{{ category.title }}">
+                        <span class="category-btn-label">{{ category.title }}</span>
+                    </button>
+                {% endfor %}
+            </div>
+        </div>
+        <section class="shop-products-section" id="shop-products-section">
+            <div class="shop-content-shell">
+                <div class="shop-products-column">
+                    <div class="shop-all-products-head">
+                        <p class="shop-all-products-kicker">All Products</p>
+                        <h3>Curated pantry staples and comfort-store picks.</h3>
+                    </div>
+                    <section class="shop-mobile-top-controls" aria-label="Mobile shop controls">
+                        <div class="shop-mobile-search">
+                            <label for="shop-mobile-search-input" class="shop-search-label">
+                                <span class="shop-control-label">Search</span>
+                            </label>
+                            <div class="shop-search-row">
+                                <input
+                                    id="shop-mobile-search-input"
+                                    type="search"
+                                    placeholder="Search products, tags, or categories"
+                                    autocomplete="off"
+                                >
+                                <button class="shop-search-btn" id="shop-mobile-search-btn" type="button">Search</button>
+                            </div>
+                        </div>
+                        <div class="shop-mobile-filter-rail">
+                            <label class="shop-mobile-inline-select">
+                                <span class="shop-control-label">Sort</span>
+                                <select id="shop-mobile-sort-select">
+                                    <option value="featured">Featured</option>
+                                    <option value="price-asc">Price: Low to high</option>
+                                    <option value="price-desc">Price: High to low</option>
+                                    <option value="name-asc">Name: A to Z</option>
+                                    <option value="name-desc">Name: Z to A</option>
+                                </select>
+                            </label>
+                            <label class="shop-mobile-inline-select">
+                                <span class="shop-control-label">Availability</span>
+                                <select id="shop-mobile-availability-select">
+                                    <option value="all">All products</option>
+                                    <option value="available">Available now</option>
+                                </select>
+                            </label>
+                            <div class="shop-mobile-category-rail" id="shop-mobile-category-filters">
+                                <button class="shop-filter-chip is-active" type="button" data-filter-category="all">All</button>
+                                {% for category in shop_categories %}
+                                    <button class="shop-filter-chip" type="button" data-filter-category="{{ category.title|lower }}">{{ category.title }}</button>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </section>
+                    <div class="full-shop">
+                        {% for product in products %}
+                            <article
+                                class="product-card"
+                                tabindex="0"
+                                data-product-name="{{ product.title }}"
+                                data-product-price="{{ product.price_display }}"
+                                data-product-price-amount="{{ product.price_amount }}"
+                                data-product-description="{{ product.description }}"
+                                data-product-variant-id="{{ product.variant_id }}"
+                                data-product-handle="{{ product.handle }}"
+                                data-product-type="{{ product.product_type }}"
+                                data-product-category="{{ product.product_type|lower }}"
+                                data-product-tags="{% for tag in product.tags %}{{ tag|lower }}{% if not forloop.last %}|{% endif %}{% endfor %}"
+                                data-product-available="{% if product.available %}true{% else %}false{% endif %}"
+                                data-product-index="{{ forloop.counter0 }}"
+                                data-product-images="{% for image in product.images %}{{ image.url }}{% if not forloop.last %}|{% endif %}{% endfor %}"
+                            >
+                                <img src="{{ product.featured_image }}" alt="{{ product.title }}">
+                                <div class="product-card-lower">
+                                    <div class="product-card-copy">
+                                        <p class="product-name">{{ product.title }}</p>
+                                        <p class="price-listing">{{ product.price_display }}</p>
+                                        <ul class="product-categories">
+                                            {% for tag in product.tags|slice:":2" %}
+                                                <li>{{ tag }}</li>
+                                            {% empty %}
+                                                <li>{{ product.product_type }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                    <div class="product-actions">
+                                        <div class="product-card-quantity" hidden>
+                                            <button class="product-card-quantity-btn" type="button" data-action="decrement" aria-label="Decrease quantity">-</button>
+                                            <span class="product-card-quantity-value">1</span>
+                                            <button class="product-card-quantity-btn" type="button" data-action="increment" aria-label="Increase quantity">+</button>
+                                        </div>
+                                        <button class="product-cart-adding" type="button">Add to Cart</button>
+                                    </div>
+                                </div>
+                            </article>
+                        {% endfor %}
+                    </div>
+                </div>
+                <aside class="shop-controls-column">
+                    <div class="shop-controls-backdrop" id="shop-controls-backdrop" hidden></div>
+                    <section class="shop-controls" id="shop-controls-panel" aria-label="Shop controls">
+                        <div class="shop-controls-mobile-head">
+                            <p class="shop-controls-mobile-title">Search &amp; Filter</p>
+                            <button class="shop-controls-mobile-close" id="shop-controls-mobile-close" type="button">
+                                Close
+                            </button>
+                        </div>
+                        <div class="shop-controls-top">
+                            <div class="shop-search">
+                                <label for="shop-search-input" class="shop-search-label">
+                                    <span class="shop-control-label">Search</span>
+                                </label>
+                                <div class="shop-search-row">
+                                    <input
+                                        id="shop-search-input"
+                                        type="search"
+                                        placeholder="Search products, tags, or categories"
+                                        autocomplete="off"
+                                        list="store-search-suggestions"
+                                    >
+                                    <button class="shop-search-btn" id="shop-search-btn" type="button">Search</button>
+                                </div>
+                            </div>
+                            <label class="shop-select-wrap">
+                                <span class="shop-control-label">Sort</span>
+                                <select id="shop-sort-select">
+                                    <option value="featured">Featured</option>
+                                    <option value="price-asc">Price: Low to high</option>
+                                    <option value="price-desc">Price: High to low</option>
+                                    <option value="name-asc">Name: A to Z</option>
+                                    <option value="name-desc">Name: Z to A</option>
+                                </select>
+                            </label>
+                            <label class="shop-select-wrap">
+                                <span class="shop-control-label">Availability</span>
+                                <select id="shop-availability-select">
+                                    <option value="all">All products</option>
+                                    <option value="available">Available now</option>
+                                </select>
+                            </label>
+                        </div>
+                        <div class="shop-controls-bottom">
+                            <div class="shop-filter-group" id="shop-category-filters">
+                                <button class="shop-filter-chip is-active" type="button" data-filter-category="all">All</button>
+                                {% for category in shop_categories %}
+                                    <button class="shop-filter-chip" type="button" data-filter-category="{{ category.title|lower }}">{{ category.title }}</button>
+                                {% endfor %}
+                            </div>
+                            <div class="shop-results-bar">
+                                <p class="shop-results-count" id="shop-results-count"></p>
+                                <button class="shop-reset-btn" id="shop-reset-btn" type="button">Reset</button>
+                            </div>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+        </section>
+    </div>
+
+    {{ shop_categories|json_script:"shop-categories-data" }}
+{% endblock %}
+
+{% block overlays %}
+    <section class="menu-overlay-shell" id="menu-overlay-shell" aria-hidden="true">
+        <div class="menu-overlay-backdrop" id="menu-overlay-backdrop"></div>
+        <aside class="menu-overlay-panel" id="menu-overlay-panel" aria-label="Menu category details">
+            <div class="menu-overlay-topbar">
+                <button class="menu-overlay-close" id="menu-overlay-close" type="button" aria-label="Close category view">
+                    Close
+                </button>
+                <div class="menu-overlay-preview">
+                    <img id="menu-overlay-preview-image" alt="Category preview">
+                </div>
+            </div>
+            <div class="menu-overlay-copy">
+                <p class="menu-overlay-kicker">Category Menu</p>
+                <div class="menu-overlay-headline">
+                    <h2 class="menu-overlay-title" id="menu-overlay-title"></h2>
+                    <p class="menu-overlay-subtitle">What do you want to eat?</p>
+                </div>
+                <p class="menu-overlay-description" id="menu-overlay-description"></p>
+                <div class="menu-overlay-controls" aria-label="Menu controls">
+                    <div class="menu-overlay-search">
+                        <label for="menu-overlay-search-input" class="menu-overlay-search-label">Search Menu</label>
+                        <div class="menu-overlay-search-row">
+                            <input
+                                id="menu-overlay-search-input"
+                                type="search"
+                                placeholder="Search items in this category"
+                            >
+                            <button class="menu-overlay-search-btn" id="menu-overlay-search-btn" type="button">Search</button>
+                        </div>
+                    </div>
+                    <label class="menu-overlay-sort">
+                        <span class="menu-overlay-search-label">Sort</span>
+                        <select id="menu-overlay-sort-select">
+                            <option value="featured">Featured</option>
+                            <option value="price-asc">Price: Low to high</option>
+                            <option value="price-desc">Price: High to low</option>
+                            <option value="name-asc">Name: A to Z</option>
+                            <option value="name-desc">Name: Z to A</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="menu-overlay-grid" id="menu-overlay-grid"></div>
+            </div>
+        </aside>
+    </section>
+
+    <section class="product-detail-shell" id="product-detail-shell" aria-hidden="true">
+        <div class="product-detail-backdrop" id="product-detail-backdrop"></div>
+        <aside class="product-detail-panel" id="product-detail-panel" aria-label="Product details">
+            <button class="product-detail-close" id="product-detail-close" type="button" aria-label="Close details">
+                Close
+            </button>
+            <div class="product-detail-scroll">
+                <div class="product-detail-gallery" id="product-detail-gallery"></div>
+                <div class="product-detail-copy">
+                    <div class="product-detail-head">
+                        <div>
+                            <p class="product-detail-kicker">Chef selection</p>
+                            <h2 class="product-detail-title" id="product-detail-title"></h2>
+                        </div>
+                        <p class="product-detail-time" id="product-detail-time"></p>
+                    </div>
+                    <p class="product-detail-description" id="product-detail-description"></p>
+                    <ul class="product-detail-tags" id="product-detail-tags"></ul>
+                    <div class="product-detail-footer">
+                        <div>
+                            <p class="product-detail-total-label">Total Price</p>
+                            <p class="product-detail-price" id="product-detail-price"></p>
+                        </div>
+                        <div class="product-detail-actions">
+                            <div class="product-detail-quantity" id="product-detail-quantity" aria-label="Choose quantity" hidden>
+                                <button class="product-detail-quantity-btn" id="product-detail-quantity-decrement" type="button" aria-label="Decrease quantity">-</button>
+                                <span class="product-detail-quantity-value" id="product-detail-quantity-value">1</span>
+                                <button class="product-detail-quantity-btn" id="product-detail-quantity-increment" type="button" aria-label="Increase quantity">+</button>
+                            </div>
+                            <button class="product-detail-cart" id="product-detail-cart" type="button">Add to Cart +</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'store/js/shop.js' %}"></script>
+{% endblock %}

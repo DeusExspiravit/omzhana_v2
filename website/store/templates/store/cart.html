@@ -1,0 +1,62 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}Cart - Omzhana Store{% endblock %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'store/css/cart.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="cart-shell">
+        <div class="cart-header">
+            <a class="cart-back" href="{% url 'shop' %}">Back to Shop</a>
+            <div>
+                <p class="cart-kicker">Your Order</p>
+                <h1 class="cart-title">Cart</h1>
+                <p class="cart-subtitle">A cleaner summary of the items you want to keep, edit, or take to checkout.</p>
+            </div>
+        </div>
+
+        <div class="cart-grid" id="cart-page-grid" hidden>
+            <div class="cart-items-panel">
+                <div class="cart-section-head">
+                    <h2>Items</h2>
+                    <p id="cart-page-count">0 products</p>
+                </div>
+                <div class="cart-items-list" id="cart-page-items"></div>
+            </div>
+
+            <aside class="cart-summary-panel">
+                <p class="cart-summary-kicker">Summary</p>
+                <h2 class="cart-summary-title">Cart Totals</h2>
+                <div class="cart-summary-row">
+                    <span>Subtotal</span>
+                    <span id="cart-page-subtotal">$0.00</span>
+                </div>
+                <div class="cart-summary-row">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+                <div class="cart-summary-divider"></div>
+                <div class="cart-summary-total">
+                    <span>Total</span>
+                    <span id="cart-page-total">$0.00</span>
+                </div>
+                <button class="cart-checkout" id="cart-page-checkout" type="button">Proceed to Checkout</button>
+                <a class="cart-continue" href="{% url 'shop' %}">Continue Shopping</a>
+                <button class="cart-clear" id="cart-page-clear" type="button">Clear Cart</button>
+            </aside>
+        </div>
+
+        <section class="cart-empty" id="cart-page-empty">
+            <h2>Your cart is empty</h2>
+            <p>Add a few items from the shop and they will show up here.</p>
+            <a class="cart-checkout" href="{% url 'shop' %}">Go to Shop</a>
+        </section>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'store/js/cart.js' %}"></script>
+{% endblock %}

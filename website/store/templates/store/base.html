@@ -13,17 +13,25 @@
 
 </head>
 
-<body id="store-body" class="store-body" data-nav="false">
+<body id="store-body" class="store-body" data-route="{{ request.resolver_match.url_name|default:'' }}">
 
     <section class="curtain" id="outer-curtain">
         <header class="header-container">
             <div class="header-content" id="header-block">
-                <h1>
-                    <a href="" id="store-link">Store</a>
-                </h1>
+                <div class="header-brand">
+                    <p class="header-kicker">Omzhana</p>
+                    <h1>
+                        <a href="{% url 'home' %}" id="store-link">Store</a>
+                    </h1>
+                </div>
+                <nav class="desktop-nav" aria-label="Primary">
+                    <a href="{% url 'home' %}" class="desktop-nav-link{% if request.resolver_match.url_name == 'home' %} is-active{% endif %}">Home</a>
+                    <a href="{% url 'shop' %}" class="desktop-nav-link{% if request.resolver_match.url_name == 'shop' %} is-active{% endif %}">Shop</a>
+                    <a href="{% url 'about' %}" class="desktop-nav-link{% if request.resolver_match.url_name == 'about' %} is-active{% endif %}">About</a>
+                </nav>
                 <div id="button-container">
-                    <button class="header-btn" id="cart-btn"> Cart </button>
-                    <button class="header-btn" id="checkout-btn"> Checkout </button>
+                    <button class="header-btn" id="search-btn" type="button"> Search </button>
+                    <button class="header-btn" id="cart-btn" type="button"> Cart </button>
                 </div>
             </div>
         </header>
@@ -31,32 +39,168 @@
 
     </section>
 
-    <button class='menu-button' id='menu-btn' onclick="toggleNav()"></button>
-    <section class="curtain" id="inner-curtain">
-        <nav class="menu" id="menu-container">
-            <a href="" class="menu-card">
-                <h3 class="menu-text">Home</h3>
-                <img src="../static/store/images/food_0.jpg" alt="Food Image">
-            </a>
-            <a href="" class="menu-card">
-                <h3 class="menu-text">Shop</h3>
-                <img src="../static/store/images/food_1.jpg" alt="Food Image">
-            </a>
-            <a href="" class="menu-card">
-                <h3 class="menu-text">About</h3>
-                <img src="../static/store/images/food_2.jpg" alt="Food Image">
-            </a>
-            <a href="" class="menu-card">
-                <h3 class="menu-text">Contact</h3>
-                <img src="../static/store/images/food_3.jpg" alt="Food Image">
-            </a>
-            <a href="" class="menu-card">
-                <h3 class="menu-text">Checkout</h3>
-                <img src="../static/store/images/food_4.jpg" alt="Food Image">
-            </a>
-        </nav>
+    <nav class="mobile-bottom-nav" aria-label="Mobile navigation">
+        <a
+            href="{% url 'home' %}"
+            class="mobile-bottom-nav-item{% if request.resolver_match.url_name == 'home' %} is-active{% endif %}"
+            data-nav-item="home"
+            aria-current="{% if request.resolver_match.url_name == 'home' %}page{% endif %}"
+        >
+            <span class="mobile-bottom-nav-pill">
+                <span class="mobile-bottom-nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 10.5 12 3l9 7.5"></path>
+                        <path d="M5.5 9.5V21h13V9.5"></path>
+                    </svg>
+                </span>
+                <span class="mobile-bottom-nav-label">Home</span>
+            </span>
+        </a>
+        <a
+            href="{% url 'shop' %}"
+            class="mobile-bottom-nav-item{% if request.resolver_match.url_name == 'shop' %} is-active{% endif %}"
+            data-nav-item="shop"
+            aria-current="{% if request.resolver_match.url_name == 'shop' %}page{% endif %}"
+        >
+            <span class="mobile-bottom-nav-pill">
+                <span class="mobile-bottom-nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6.5 7h11l-1 11h-9z"></path>
+                        <path d="M9 7a3 3 0 0 1 6 0"></path>
+                    </svg>
+                </span>
+                <span class="mobile-bottom-nav-label">Shop</span>
+            </span>
+        </a>
+        <button
+            class="mobile-bottom-nav-item{% if request.resolver_match.url_name == 'shop' %} is-utility{% endif %}"
+            id="mobile-search-trigger"
+            type="button"
+            data-nav-item="search"
+            aria-label="Search products"
+        >
+            <span class="mobile-bottom-nav-pill">
+                <span class="mobile-bottom-nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="6.5"></circle>
+                        <path d="m16 16 4.5 4.5"></path>
+                    </svg>
+                </span>
+                <span class="mobile-bottom-nav-label">Search</span>
+            </span>
+        </button>
+        <button class="mobile-bottom-nav-item" id="mobile-cart-trigger" type="button" data-nav-item="cart" aria-label="Open cart">
+            <span class="mobile-bottom-nav-pill">
+                <span class="mobile-bottom-nav-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="19" r="1.5"></circle>
+                        <circle cx="17" cy="19" r="1.5"></circle>
+                        <path d="M4 5h2l2.1 9.2a1 1 0 0 0 1 .8h7.8a1 1 0 0 0 1-.8L20 8H7"></path>
+                    </svg>
+                </span>
+                <span class="mobile-bottom-nav-label">Cart</span>
+                <span class="mobile-bottom-nav-badge" id="mobile-cart-badge" hidden>0</span>
+            </span>
+        </button>
+    </nav>
+
+    <button class="store-assistant-trigger" id="store-assistant-trigger" type="button" aria-label="Open storefront assistant">
+        <span class="store-assistant-trigger-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3c4.97 0 9 3.58 9 8s-4.03 8-9 8a10.8 10.8 0 0 1-3.14-.46L4 21l1.3-3.47C3.86 16.08 3 13.62 3 11c0-4.42 4.03-8 9-8Z"></path>
+                <path d="M8.5 11h.01"></path>
+                <path d="M12 11h.01"></path>
+                <path d="M15.5 11h.01"></path>
+            </svg>
+        </span>
+        <span class="store-assistant-trigger-label">Assistant</span>
+    </button>
+
+    <section class="store-assistant-shell" id="store-assistant-shell" aria-hidden="true">
+        <div class="store-assistant-backdrop" id="store-assistant-backdrop"></div>
+        <aside class="store-assistant-panel" id="store-assistant-panel" aria-label="Storefront assistant">
+            <div class="store-assistant-top">
+                <div>
+                    <p class="store-assistant-kicker">Omzhana Guide</p>
+                    <h2 class="store-assistant-title">Store Assistant</h2>
+                    <p class="store-assistant-subtitle">Ask about products, pairings, ingredients, prep, or what to buy next.</p>
+                </div>
+                <button class="store-assistant-close" id="store-assistant-close" type="button" aria-label="Close assistant">Close</button>
+            </div>
+            <div class="store-assistant-quick" id="store-assistant-quick">
+                <button type="button" class="store-assistant-chip" data-assistant-prompt="Recommend something spicy">Something spicy</button>
+                <button type="button" class="store-assistant-chip" data-assistant-prompt="Show me quick meals">Quick meal</button>
+                <button type="button" class="store-assistant-chip" data-assistant-prompt="What pairs well with ramen?">Pair with ramen</button>
+                <button type="button" class="store-assistant-chip" data-assistant-prompt="Do you have vegan-friendly products?">Vegan-friendly</button>
+            </div>
+            <div class="store-assistant-messages" id="store-assistant-messages"></div>
+            <form class="store-assistant-form" id="store-assistant-form">
+                <label class="store-assistant-label" for="store-assistant-input">Ask the storefront assistant</label>
+                <div class="store-assistant-input-row">
+                    <input id="store-assistant-input" type="text" placeholder="Find a quick pantry pick, ask about spice, prep, or ingredients" autocomplete="off">
+                    <button class="store-assistant-send" type="submit">Send</button>
+                </div>
+            </form>
+        </aside>
     </section>
 
+    <section class="header-search-shell" id="header-search-shell" aria-hidden="true">
+        <div class="header-search-backdrop" id="header-search-backdrop"></div>
+        <aside class="header-search-panel" id="header-search-panel" aria-label="Store search">
+            <div class="header-search-top">
+                <div>
+                    <p class="header-search-kicker">Search</p>
+                    <h2 class="header-search-title">Find Products</h2>
+                </div>
+                <button class="header-search-close" id="header-search-close" type="button" aria-label="Close search">Close</button>
+            </div>
+            <form class="header-search-form" id="header-search-form">
+                <label class="header-search-label" for="header-search-input">Search products, tags, or categories</label>
+                <div class="header-search-input-row">
+                    <input id="header-search-input" type="search" placeholder="Search products, tags, or categories" autocomplete="off">
+                    <button class="header-search-submit" type="submit">Search</button>
+                </div>
+            </form>
+            <div class="header-search-results" id="header-search-results" aria-live="polite"></div>
+        </aside>
+    </section>
+
+    {% block overlays %}{% endblock %}
+
+    <section class="cart-drawer-shell" id="cart-drawer-shell" aria-hidden="true">
+        <div class="cart-drawer-backdrop" id="cart-drawer-backdrop"></div>
+        <aside class="cart-drawer-panel" id="cart-drawer-panel" aria-label="Shopping cart">
+            <div class="cart-drawer-top">
+                <div>
+                    <p class="cart-drawer-kicker">Your order</p>
+                    <h2 class="cart-drawer-title">Cart</h2>
+                </div>
+                <button class="cart-drawer-close" id="cart-drawer-close" type="button" aria-label="Close cart">
+                    Close
+                </button>
+            </div>
+            <div class="cart-drawer-scroll">
+                <ul class="cart-drawer-items" id="cart-drawer-items"></ul>
+                <p class="cart-drawer-empty" id="cart-drawer-empty">Your cart is empty.</p>
+            </div>
+            <div class="cart-drawer-footer">
+                <div>
+                    <p class="cart-drawer-total-label">Subtotal</p>
+                    <p class="cart-drawer-total" id="cart-drawer-total">$0.00</p>
+                </div>
+                <div class="cart-drawer-actions">
+                    <button class="cart-drawer-secondary" id="cart-drawer-view" type="button">View Cart</button>
+                    <button class="cart-drawer-primary" id="cart-drawer-checkout" type="button">Checkout</button>
+                </div>
+            </div>
+        </aside>
+    </section>
+
+{% if assistant_catalog %}
+{{ assistant_catalog|json_script:"assistant-catalog-data" }}
+{% endif %}
 <script src="{% static 'store/js/base.js' %}"></script>
+<script src="{% static 'store/js/assistant.js' %}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>
