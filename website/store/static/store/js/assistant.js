@@ -12,6 +12,10 @@ const assistantQuick = document.querySelector("#store-assistant-quick");
 const assistantState = {
     lastMatchedProduct: null,
 };
+let assistantTypingTimer = null;
+let dragStartY = 0;
+let dragCurrentY = 0;
+let isDraggingAssistant = false;
 
 const assistantCatalog = (() => {
     if (!assistantCatalogElement?.textContent) {
@@ -41,6 +45,15 @@ const openAssistant = () => {
         return;
     }
 
+    if (assistantTrigger && assistantPanel) {
+        const triggerRect = assistantTrigger.getBoundingClientRect();
+        const panelRect = assistantPanel.getBoundingClientRect();
+        const originX = Math.max(0, Math.min(panelRect.width, triggerRect.left + triggerRect.width / 2 - panelRect.left));
+        const originY = Math.max(0, Math.min(panelRect.height, triggerRect.top + triggerRect.height / 2 - panelRect.top));
+        assistantPanel.style.setProperty("--assistant-origin-x", `${originX}px`);
+        assistantPanel.style.setProperty("--assistant-origin-y", `${originY}px`);
+    }
+
     assistantShell.classList.add("is-open");
     assistantShell.setAttribute("aria-hidden", "false");
     document.body.style.overflow = "hidden";
@@ -52,9 +65,12 @@ const closeAssistant = () => {
         return;
     }
 
+    window.clearTimeout(assistantTypingTimer);
+    assistantTypingTimer = null;
     assistantShell.classList.remove("is-open");
     assistantShell.setAttribute("aria-hidden", "true");
     document.body.style.overflow = "";
+    assistantPanel?.style.removeProperty("transform");
 };
 
 const scrollAssistantToBottom = () => {
@@ -118,7 +134,20 @@ const appendAssistantMessage = (role, html) => {
     message.innerHTML = html;
     assistantMessages.appendChild(message);
     scrollAssistantToBottom();
+    return message;
 };
+
+const appendTypingMessage = () =>
+    appendAssistantMessage(
+        "assistant is-typing",
+        `
+            <div class="store-assistant-typing" aria-label="Assistant is typing">
+                <span class="store-assistant-typing-dot"></span>
+                <span class="store-assistant-typing-dot"></span>
+                <span class="store-assistant-typing-dot"></span>
+            </div>
+        `,
+    );
 
 const scoreProduct = (product, query) => {
     const text = normalizeProductText(product);
@@ -470,7 +499,12 @@ assistantForm?.addEventListener("submit", (event) => {
     }
 
     appendAssistantMessage("user", `<p>${escapeAssistantHtml(query)}</p>`);
-    appendAssistantMessage("assistant", generateAssistantReply(query));
+    const typingMessage = appendTypingMessage();
+    window.clearTimeout(assistantTypingTimer);
+    assistantTypingTimer = window.setTimeout(() => {
+        typingMessage?.remove();
+        appendAssistantMessage("assistant", generateAssistantReply(query));
+    }, 320);
     if (assistantInput) {
         assistantInput.value = "";
     }
@@ -495,6 +529,63 @@ document.addEventListener("keydown", (event) => {
         closeAssistant();
     }
 });
+
+const resetAssistantDrag = () => {
+    isDraggingAssistant = false;
+    dragStartY = 0;
+    dragCurrentY = 0;
+    if (assistantPanel && assistantShell?.classList.contains("is-open")) {
+        assistantPanel.style.transform = "";
+    }
+};
+
+assistantPanel?.addEventListener(
+    "touchstart",
+    (event) => {
+        if (!assistantShell?.classList.contains("is-open") || window.innerWidth > 900) {
+            return;
+        }
+
+        const touch = event.touches[0];
+        dragStartY = touch.clientY;
+        dragCurrentY = touch.clientY;
+        isDraggingAssistant = true;
+    },
+    { passive: true },
+);
+
+assistantPanel?.addEventListener(
+    "touchmove",
+    (event) => {
+        if (!isDraggingAssistant || !assistantPanel || window.innerWidth > 900) {
+            return;
+        }
+
+        const touch = event.touches[0];
+        dragCurrentY = touch.clientY;
+        const rawDelta = Math.max(0, dragCurrentY - dragStartY);
+        const resistedDelta = rawDelta > 0 ? rawDelta * 0.82 : 0;
+        assistantPanel.style.transform = `translateY(${resistedDelta}px) scale(${Math.max(0.96, 1 - rawDelta / 1200)})`;
+    },
+    { passive: true },
+);
+
+assistantPanel?.addEventListener("touchend", () => {
+    if (!isDraggingAssistant || !assistantPanel || window.innerWidth > 900) {
+        resetAssistantDrag();
+        return;
+    }
+
+    const delta = Math.max(0, dragCurrentY - dragStartY);
+    if (delta > 120) {
+        closeAssistant();
+    } else {
+        assistantPanel.style.transform = "";
+    }
+    resetAssistantDrag();
+});
+
+assistantPanel?.addEventListener("touchcancel", resetAssistantDrag);
 
 if (assistantMessages && assistantCatalog.length > 0) {
     appendAssistantMessage("assistant", assistantIntroMarkup);
