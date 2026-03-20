@@ -755,8 +755,7 @@ body {
     pointer-events: auto;
 }
 
-.store-assistant-shell.is-open ~ .store-assistant-trigger,
-.store-assistant-shell.is-open + .header-search-shell ~ .store-assistant-trigger {
+.store-assistant-trigger.is-hidden {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;

@@ -56,6 +56,7 @@ const openAssistant = () => {
 
     assistantShell.classList.add("is-open");
     assistantShell.setAttribute("aria-hidden", "false");
+    assistantTrigger?.classList.add("is-hidden");
     document.body.style.overflow = "hidden";
     assistantInput?.focus();
 };
@@ -69,6 +70,7 @@ const closeAssistant = () => {
     assistantTypingTimer = null;
     assistantShell.classList.remove("is-open");
     assistantShell.setAttribute("aria-hidden", "true");
+    assistantTrigger?.classList.remove("is-hidden");
     document.body.style.overflow = "";
     assistantPanel?.style.removeProperty("transform");
 };
